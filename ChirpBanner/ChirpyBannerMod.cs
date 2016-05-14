@@ -52,7 +52,8 @@ namespace ChirpBanner
 			group.AddCheckbox("Filter out Chirps", CurrentConfig.FilterChirps, CheckFilterChirper);
 			group.AddSlider("Scroll Speed", 50, 200, 1.0f, ScrollSpeedf, CheckScrollSpeed);
 			group.AddSlider("Chirp Size", 5, 100, 1.0f, CurrentConfig.TextSize, CheckChirpSize);
-			group.AddSlider("Transparency", 0, 1, 0.10f, CurrentConfig.BackgroundAlpha, CheckTransparency);
+			group.AddSlider("Transparency", 0.1f, 1, 0.10f, CurrentConfig.BackgroundAlpha, CheckTransparency);
+			group.AddSlider("Banner Width", 0, 1, 0.10f, CurrentConfig.BannerWidth, CheckWidth);
 
 			UIHelperBase colors = helper.AddGroup ("Colors must start with # and be in 8-digit hex form");
 			colors.AddTextfield ("Name Color", CurrentConfig.NameColor, CheckChirpNameColor, CheckChirpNameColor);
@@ -85,6 +86,10 @@ namespace ChirpBanner
 		}
 		public void CheckTransparency(float c) {
 			CurrentConfig.BackgroundAlpha = c;
+			MyConfig.Serialize("ChirpBannerConfig.xml", CurrentConfig);
+		}
+		public void CheckWidth(float c) {
+			CurrentConfig.BannerWidth = c;
 			MyConfig.Serialize("ChirpBannerConfig.xml", CurrentConfig);
 		}
 
@@ -285,11 +290,17 @@ namespace ChirpBanner
 				bool bPopIt = false;
 				float currentTrailingEdge = 0;
 				foreach (BannerLabelStruct bls in ChirpyBanner.theBannerPanel.BannerLabelsQ) {
+
+					//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp y position: {0}", bls.Label.relativePosition.y));
+					//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp x position: {0}", bls.Label.relativePosition.x));
+					//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp width: {0}", bls.Label.width));
+
 					if (bls.IsCurrentlyVisible)
 					{
 						bls.Label.relativePosition = new Vector3(bls.Label.relativePosition.x - Time.deltaTime * ChirpyBanner.CurrentConfig.ScrollSpeed, bls.Label.relativePosition.y, bls.Label.relativePosition.z);
 						bls.RelativePosition = bls.Label.relativePosition;
-						//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp position! {0}", bls.RelativePosition));
+
+
 
 						// is it off to the left entirely?                              
 						if ((bls.Label.relativePosition.x + bls.Label.width) <= 0)
@@ -366,7 +377,6 @@ namespace ChirpBanner
             chirper.ShowBuiltinChirper(false);
          }
 
-         CreateBannerConfigUI();
          CreateBannerUI();
 
       }
@@ -472,19 +482,19 @@ namespace ChirpBanner
 				if (CurrentConfig.FilterChirps) {
 					// If Chirp is deemed not important as a result of above LocaleIDs, just return, do nothing
 					if (!important) {
-						DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is not important: {0}", message.text));
+						//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is not important: {0}", message.text));
 						return;
 					}
 					// Otherwise, do something
 					if (important) {
-						DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is important: {0}", message.text));
+						//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is important: {0}", message.text));
 						theBannerPanel.CreateBannerLabel(str, message.senderID);
 					}
 				}
             
 			//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("textColorTag: {0}", textColorTag));
 			//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("nameColorTag: {0}", nameColorTag));
-			DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp! {0}", message.text));
+			//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp! {0}", message.text));
             
             theBannerPanel.CreateBannerLabel(str, message.senderID);
 			//MyIThreadingExtension.addTask2Main(() => { theBannerPanel.CreateBannerLabel(str, message.senderID); });
@@ -503,25 +513,6 @@ namespace ChirpBanner
 
       public void OnUpdate()
       {
-      }
-
-      private void CreateBannerConfigUI()
-      {
-         // create UI using ColossalFramework UI classes
-         UIView uiv = UIView.GetAView();
-
-         if (uiv == null)
-         {
-            return;
-         }
-
-         theBannerConfigPanel = (BannerConfiguration)uiv.AddUIComponent(typeof(BannerConfiguration));
-
-         if (theBannerConfigPanel != null)
-         {
-            theBannerConfigPanel.isVisible = false; // start off hidden, until banner clicked
-            theBannerConfigPanel.Initialize(this);
-         }
       }
 
       private void CreateBannerUI()
@@ -547,20 +538,7 @@ namespace ChirpBanner
 
             // add mouse click handler to us here
             //theBannerPanel.eventClick += BannerPanel_eventClick;
-            theBannerPanel.eventMouseUp += BannerPanel_eventMouseUp;
-         }
-      }
-
-      public void BannerPanel_eventClick(UIComponent component, UIMouseEventParameter eventParam)
-      {
-      }
-
-      public void BannerPanel_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
-      {
-         if (eventParam.buttons == UIMouseButton.Right)
-         {
-            // show config window at position of click
-            theBannerConfigPanel.ShowPanel(eventParam.position, false);
+            //theBannerPanel.eventMouseUp += BannerPanel_eventMouseUp;
          }
       }
 
@@ -613,12 +591,12 @@ namespace ChirpBanner
          this.backgroundSprite = "GenericPanel";
 
          this.position = new Vector3((-viewWidth / 2) + banner_inset, (viewHeight / 2));
-         this.width = viewWidth - (banner_inset * 2);
+			this.width = (viewWidth * ChirpyBanner.CurrentConfig.BannerWidth) - (banner_inset * 2);
         
          this.height = 25;
 
          this.color = BackgroundColor;
-     	 this.opacity = 1.0f;
+         this.opacity = ChirpyBanner.CurrentConfig.BackgroundAlpha;
 
          this.autoLayout = false;
          this.clipChildren = true;
@@ -712,7 +690,8 @@ namespace ChirpBanner
       public string MessageColor = "#FFFFFFFF";
       public string NameColor = "#31C3FFFF";
       public int version = 0;
-	  public float BackgroundAlpha = 0f;
+	  public float BackgroundAlpha = 0.1f;
+		public float BannerWidth = 1.0f;
 		public bool FilterChirps = false;
 
       public static void Serialize(string filename, MyConfig config)
