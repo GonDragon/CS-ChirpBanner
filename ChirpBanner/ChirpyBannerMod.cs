@@ -128,103 +128,6 @@ namespace ChirpBanner
 
     }
 
-	// Adds a button to configure the ChirperBanner
-	// Commented out, now relying on the built-in Mod Options menu
-	/*
-	public class LoadingExtension : LoadingExtensionBase
-	{
-		ILoading loading;
-		public override void OnCreated(ILoading loading)
-		{
-			this.loading = loading;
-		}
-
-		public override void OnLevelLoaded(LoadMode mode)
-		{
-			// Get the UIView object. This seems to be the top-level object for most
-			// of the UI.
-			var uiView = UIView.GetAView();
-
-			// Add a new button to the view.
-			var button = (UIButton)uiView.AddUIComponent(typeof(UIButton));
-
-			// Set the text to show on the button.
-			//button.text = "Click Me!";
-
-			// Set the button dimensions.
-			button.width = 30;
-			button.height = 30;
-
-			// Style the button to look like a menu button.
-			button.normalBgSprite = "ButtonMenu";
-			button.normalFgSprite = "ChirperIcon";
-			button.disabledBgSprite = "ButtonMenuDisabled";
-			button.hoveredBgSprite = "RoundBackBigHovered";
-			button.focusedBgSprite = "ButtonMenuFocused";
-			button.pressedBgSprite = "RoundBackBigPressed";
-
-			// Enable button sounds.
-			button.playAudioEvents = true;
-
-			// Place the button.
-			button.transformPosition = new Vector3(1.61f, 1.0f);
-
-			// Respond to button click.
-			button.eventClick += ButtonClick;
-
-			if (loading.managers.threading.simulationPaused) 
-			{
-				ChirpyBanner.CurrentConfig.ScrollSpeed = 0;
-			}
-		}
-
-		private void ButtonClick(UIComponent component, UIMouseEventParameter eventParam)
-		{
-			ChirpyBanner.theBannerConfigPanel.ShowPanel(Vector2.zero, true);
-		}
-	}
-	*/
-
-	// Function to thread the Chirp stuff
-	// Code for threading courtesy of https://github.com/onewaycitystreets/StreetDirectionViewer/blob/0107f423af6a79a81dfce3e6942d01df9db0065f/StreetDirectionViewer.cs
-	/*
-	public class ChirpyThreadingExtension : ThreadingExtensionBase {
-
-		public IThreading threading;
-		public override void OnCreated(IThreading threading) {
-			this.threading = threading;
-				
-		}
-
-		public override void OnReleased() {
-
-		}
-
-		public override void OnUpdate(float realTimeDelta, float simulationTimeDelta) {
-			// OnCreate appears to be called too early to add things to the UI, so add the button
-			// in OnUpdate.
-
-		}
-
-		public override void OnBeforeSimulationTick() {
-
-		}
-
-		public void OnCreated(ILoading loading) {
-			// This doesn't seem to be called. Maybe the plugin manager
-			// sees that it implements IThreadingExtension first and doesn't
-			// look for other interfaces?
-		}
-
-		public void OnLevelLoaded(LoadMode mode) {
-
-		}
-
-		public void OnLevelUnloading() {
-
-		}
-
-}*/
 	public class MyIThreadingExtension: IThreadingExtension
 	{
 		static IThreading threading = null;
@@ -533,6 +436,8 @@ namespace ChirpBanner
             //theBannerPanel.BackgroundColor = new Color32(0, 0, 0, bAlpha);
             //theBannerPanel.FontSize = CurrentConfig.TextSize;
             theBannerPanel.Initialize();
+
+			UIDragHandle dh = (UIDragHandle)theBannerPanel.AddUIComponent(typeof(UIDragHandle));
 
             // add mouse click handler to us here
             //theBannerPanel.eventClick += BannerPanel_eventClick;
