@@ -349,8 +349,6 @@ namespace ChirpBanner
       public static BannerPanel theBannerPanel;
       public static IChirper BuiltinChirper;
 
-      public static BannerConfiguration theBannerConfigPanel;
-
       public void OnCreated(IChirper chirper)
       {
          // read config file for settings
