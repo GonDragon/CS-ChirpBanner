@@ -43,7 +43,7 @@ namespace ChirpBanner
 			colors.AddTextfield ("Name Color", ChirpyBanner.CurrentConfig.NameColor, CheckChirpNameColor, CheckChirpNameColor);
 			colors.AddTextfield ("Chirp Color", ChirpyBanner.CurrentConfig.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
 
-			UIHelperBase version = helper.AddGroup ("v1.3");
+			UIHelperBase version = helper.AddGroup ("v1.3.1");
 
 			//group.AddSlider("My Slider", 0, 1, 0.01f, 0.5f, EventSlide);
 			//group.AddDropdown("My Dropdown", new string[] { "First Entry", "Second Entry", "Third Entry" }, -1, EventSel);
@@ -498,8 +498,8 @@ namespace ChirpBanner
 			int viewWidth = (int)uiv.GetScreenResolution ().x;
 			int viewHeight = (int)uiv.GetScreenResolution ().y;
 
-			//this.height = 25;
-			this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
+			this.height = 25.0f;
+			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
 			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = ChirpyBanner.CurrentConfig.BackgroundAlpha;
 			this.width = (viewWidth * ChirpyBanner.CurrentConfig.BannerWidth) - (banner_inset * 2);
@@ -525,18 +525,18 @@ namespace ChirpBanner
 			hasChirps = true;
 			ChirpLabel = this.AddUIComponent<UILabel> ();
 			if (ChirpLabel != null) {
-				//newLabel.autoSize = true;
-				//newLabel.autoHeight = true;
-				ChirpLabel.autoHeight = true;
-				ChirpLabel.autoSize = true;
+				//ChirpLabel.autoHeight = true;
+				//ChirpLabel.autoSize = true;
 				ChirpLabel.verticalAlignment = UIVerticalAlignment.Middle;
 				ChirpLabel.textAlignment = UIHorizontalAlignment.Left;
 				ChirpLabel.relativePosition = new Vector3 ((this.width), 0);
 				//ChirpLabel.height = (float)ChirpyBanner.CurrentConfig.TextSize;
+				ChirpLabel.height = 10.0f;
 				ChirpLabel.padding = new RectOffset (0, 0, 2, 2);
 
-				ChirpLabel.textScaleMode = UITextScaleMode.ScreenResolution;
-				ChirpLabel.textScale = (float)ChirpyBanner.CurrentConfig.TextSize / 15f;
+				ChirpLabel.textScaleMode = UITextScaleMode.None;
+				ChirpLabel.textScale = 1.0f;
+				ChirpLabel.autoHeight = false;
 				ChirpLabel.opacity = 1.0f;
 				ChirpLabel.processMarkup = true;
 				ChirpLabel.text = chirpStr;
