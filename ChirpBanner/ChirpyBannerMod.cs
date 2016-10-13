@@ -16,34 +16,41 @@ namespace ChirpBanner
 {
 	public class ChirpyBannerMod : IUserMod
 	{
+		// Interesting trick picked up from https://github.com/earalov/Skylines-NoPillars/blob/8079649da8574bb5b1ef00dfcae58d0d854efed2/NoPillars/NoPillarsMod.cs
+		private static bool _optionsLoaded;
+
 		public string Description {
 			get { return "Replaces Chirpy with a scrolling Marquee banner."; }
 		}
 
 		public string Name {
-			get { return "Chirpy Banner+"; }
+			get {
+				if (!_optionsLoaded) {
+					MyConfig.LoadConfig ();
+					_optionsLoaded = true;
+				}
+				return "Chirpy Banner+"; 
+			}
 		}
 
 		public void OnSettingsUI (UIHelperBase helper)
 		{
-			
-			MyConfig.LoadConfig ();
-			float ScrollSpeedf = (float)ChirpyBanner.CurrentConfig.ScrollSpeed;
+			float ScrollSpeedf = (float)MyConfig.ConfigHolder.Config.ScrollSpeed;
 
 			UIHelperBase group = helper.AddGroup ("ChirpBanner+ Options");
-			group.AddCheckbox ("Hide built-in Chirper", ChirpyBanner.CurrentConfig.DestroyBuiltinChirper, CheckHideChirper);
-			group.AddCheckbox ("Filter out unimportant Chirps", ChirpyBanner.CurrentConfig.FilterChirps, CheckFilterChirper);
-			group.AddCheckbox ("Make important Chirps red", ChirpyBanner.CurrentConfig.ColorChirps, CheckColorChirper);
+			group.AddCheckbox ("Hide built-in Chirper", MyConfig.ConfigHolder.Config.DestroyBuiltinChirper, CheckHideChirper);
+			group.AddCheckbox ("Filter out unimportant Chirps", MyConfig.ConfigHolder.Config.FilterChirps, CheckFilterChirper);
+			group.AddCheckbox ("Make important Chirps red", MyConfig.ConfigHolder.Config.ColorChirps, CheckColorChirper);
 			group.AddSlider ("Scroll Speed", 50, 200, 1.0f, ScrollSpeedf, CheckScrollSpeed);
-			group.AddSlider ("Chirp Size", 5, 100, 1.0f, ChirpyBanner.CurrentConfig.TextSize, CheckChirpSize);
-			group.AddSlider ("Transparency", 0.1f, 1, 0.10f, ChirpyBanner.CurrentConfig.BackgroundAlpha, CheckTransparency);
-			group.AddSlider ("Banner Width", 0, 1, 0.10f, ChirpyBanner.CurrentConfig.BannerWidth, CheckWidth);
+			//group.AddSlider ("Chirp Size", 5, 100, 1.0f, ChirpyBanner.CurrentConfig.TextSize, CheckChirpSize);
+			group.AddSlider ("Transparency", 0.1f, 1, 0.10f, MyConfig.ConfigHolder.Config.BackgroundAlpha, CheckTransparency);
+			group.AddSlider ("Banner Width", 0, 1, 0.10f, MyConfig.ConfigHolder.Config.BannerWidth, CheckWidth);
 
 			UIHelperBase colors = helper.AddGroup ("Colors must start with # and be in 8-digit hex form");
-			colors.AddTextfield ("Name Color", ChirpyBanner.CurrentConfig.NameColor, CheckChirpNameColor, CheckChirpNameColor);
-			colors.AddTextfield ("Chirp Color", ChirpyBanner.CurrentConfig.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
+			colors.AddTextfield ("Name Color", MyConfig.ConfigHolder.Config.NameColor, CheckChirpNameColor, CheckChirpNameColor);
+			colors.AddTextfield ("Chirp Color", MyConfig.ConfigHolder.Config.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
 
-			UIHelperBase version = helper.AddGroup ("v1.3.1");
+			UIHelperBase version = helper.AddGroup ("v1.3.3");
 
 			//group.AddSlider("My Slider", 0, 1, 0.01f, 0.5f, EventSlide);
 			//group.AddDropdown("My Dropdown", new string[] { "First Entry", "Second Entry", "Third Entry" }, -1, EventSel);
@@ -54,45 +61,45 @@ namespace ChirpBanner
 
 		public void CheckHideChirper (bool c)
 		{
-			ChirpyBanner.CurrentConfig.DestroyBuiltinChirper = c;
+			MyConfig.ConfigHolder.Config.DestroyBuiltinChirper = c;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckFilterChirper (bool c)
 		{
-			ChirpyBanner.CurrentConfig.FilterChirps = c;
+			MyConfig.ConfigHolder.Config.FilterChirps = c;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckColorChirper (bool c)
 		{
-			ChirpyBanner.CurrentConfig.ColorChirps = c;
+			MyConfig.ConfigHolder.Config.ColorChirps = c;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckScrollSpeed (float c)
 		{
 			int ScrollSpeedi = (int)c;
-			ChirpyBanner.CurrentConfig.ScrollSpeed = ScrollSpeedi;
+			MyConfig.ConfigHolder.Config.ScrollSpeed = ScrollSpeedi;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckChirpSize (float c)
 		{
 			int ChirpSizei = (int)c;
-			ChirpyBanner.CurrentConfig.TextSize = ChirpSizei;
+			MyConfig.ConfigHolder.Config.TextSize = ChirpSizei;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckTransparency (float c)
 		{
-			ChirpyBanner.CurrentConfig.BackgroundAlpha = c;
+			MyConfig.ConfigHolder.Config.BackgroundAlpha = c;
 			MyConfig.SaveConfig ();
 		}
 
 		public void CheckWidth (float c)
 		{
-			ChirpyBanner.CurrentConfig.BannerWidth = c;
+			MyConfig.ConfigHolder.Config.BannerWidth = c;
 			MyConfig.SaveConfig ();
 		}
 
@@ -107,9 +114,9 @@ namespace ChirpBanner
 			}
 			// Check length, if it doesn't validate, set it to default
 			if (fullc.Length != 9) { // ie: #001122FF
-				ChirpyBanner.CurrentConfig.NameColor = "#31C3FFFF";
+				MyConfig.ConfigHolder.Config.NameColor = "#31C3FFFF";
 			} else {
-				ChirpyBanner.CurrentConfig.NameColor = fullc;
+				MyConfig.ConfigHolder.Config.NameColor = fullc;
 			}
 			MyConfig.SaveConfig ();
 		}
@@ -125,9 +132,9 @@ namespace ChirpBanner
 			}
 			// Check length, if it doesn't validate, set it to default
 			if (fullc.Length != 9) { // ie: #001122FF
-				ChirpyBanner.CurrentConfig.MessageColor = "#FFFFFFFF";
+				MyConfig.ConfigHolder.Config.MessageColor = "#FFFFFFFF";
 			} else {
-				ChirpyBanner.CurrentConfig.MessageColor = fullc;
+				MyConfig.ConfigHolder.Config.MessageColor = fullc;
 			}
 			MyConfig.SaveConfig ();
 		}
@@ -207,7 +214,7 @@ namespace ChirpBanner
 					//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp width: {0}", bls.Label.width));
 
 					if (bls.IsCurrentlyVisible) {
-						bls.Label.relativePosition = new Vector3 (bls.Label.relativePosition.x - simulationTimeDelta * ChirpyBanner.CurrentConfig.ScrollSpeed, bls.Label.relativePosition.y, bls.Label.relativePosition.z);
+						bls.Label.relativePosition = new Vector3 (bls.Label.relativePosition.x - simulationTimeDelta * MyConfig.ConfigHolder.Config.ScrollSpeed, bls.Label.relativePosition.y, bls.Label.relativePosition.z);
 						bls.RelativePosition = bls.Label.relativePosition;
 
 						//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("bls.Label.width: {0}", bls.Label.width));
@@ -259,20 +266,17 @@ namespace ChirpBanner
 
 	public class ChirpyBanner : IChirperExtension
 	{
-		public static MyConfig CurrentConfig;
 		public static BannerPanel theBannerPanel;
 		public static IChirper BuiltinChirper;
 
 		public void OnCreated (IChirper chirper)
 		{
 			// read config file for settings
-			MyConfig.LoadConfig ();
-
-
+			//MyConfig.LoadConfig ();
 
 			BuiltinChirper = chirper;
 
-			if (CurrentConfig.DestroyBuiltinChirper) {
+			if (MyConfig.ConfigHolder.Config.DestroyBuiltinChirper) {
 				chirper.ShowBuiltinChirper (false);
 			}
 
@@ -347,8 +351,8 @@ namespace ChirpBanner
 				// use rich styled text
 				// Colossal markup uses sliiiiiightly different tags than unity.
 				// munge our config strings to fit
-				string nameColorTag = CurrentConfig.NameColor;
-				string textColorTag = CurrentConfig.MessageColor;
+				string nameColorTag = MyConfig.ConfigHolder.Config.NameColor;
+				string textColorTag = MyConfig.ConfigHolder.Config.MessageColor;
 
 				if (nameColorTag.Length == 9) { // ie: #001122FF
 					nameColorTag = nameColorTag.Substring (0, 7); // drop alpha bits
@@ -359,7 +363,7 @@ namespace ChirpBanner
 				}
 
 				// Check for CurrentConfig.ColorChirps
-				if (CurrentConfig.ColorChirps) {
+				if (MyConfig.ConfigHolder.Config.ColorChirps) {
 					// If chirp is important, and ColorChirps is enabled, make the chirp name and message red.
 					if (important) {
 						//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is important: {0}", message.text));
@@ -373,7 +377,7 @@ namespace ChirpBanner
 				string str = String.Format ("<color{0}>{1}</color> : <color{2}>{3}</color>", nameColorTag, message.senderName, textColorTag, message.text);
 
 				// Check for CurrentConfig.FilterChirps
-				if (CurrentConfig.FilterChirps) {
+				if (MyConfig.ConfigHolder.Config.FilterChirps) {
 					// If Chirp is deemed not important as a result of above LocaleIDs, just return, do nothing
 					if (!important) {
 						//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is not important: {0}", message.text));
@@ -427,13 +431,7 @@ namespace ChirpBanner
 
 				//theBannerPanel.BackgroundColor = new Color32(0, 0, 0, bAlpha);
 				//theBannerPanel.FontSize = CurrentConfig.TextSize;
-				theBannerPanel.Initialize ();
-
-				UIDragHandle dh = (UIDragHandle)theBannerPanel.AddUIComponent (typeof(UIDragHandle));
-
-				// add mouse click handler to us here
-				//theBannerPanel.eventClick += BannerPanel_eventClick;
-				//theBannerPanel.eventMouseUp += BannerPanel_eventMouseUp;
+				theBannerPanel.SendToBack();
 
 				// Tests for overlapping:
 				//theBannerPanel.CreateBannerLabel("OMG", 123456);
@@ -468,28 +466,34 @@ namespace ChirpBanner
 		public Queue<BannerLabelStruct> BannerLabelsQ = new Queue<BannerLabelStruct> ();
 		public static bool hasChirps = false;
 
-		public void Initialize ()
-		{
+		public override void Start () {
 			UIView uiv = UIView.GetAView ();
+			int viewWidth = (int)uiv.GetScreenResolution ().x;
+			int viewHeight = (int)uiv.GetScreenResolution ().y;
 
 			if (uiv == null) {
 				Cleanup ();
 				return;
 			}
-			SetConfig ();
 			this.autoSize = true;
 			this.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left;
 			this.backgroundSprite = "GenericPanel";
-
 			this.color = new Color32 (0, 0, 0, 0xff);
-			//this.opacity = ChirpyBanner.CurrentConfig.BackgroundAlpha;
+			this.height = 25.0f;
+			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
+			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
+			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
+			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 
 			this.autoLayout = false;
 			this.clipChildren = true;
+			this.SendToBack ();
+
+			UIDragHandle dh = (UIDragHandle)this.AddUIComponent (typeof(UIDragHandle));
 			//this.isInteractive = true;
 			//ChirpLabel = this.AddUIComponent<UILabel> ();
 
-			this.SendToBack ();
+
 		}
 
 		public void SetConfig ()
@@ -501,8 +505,8 @@ namespace ChirpBanner
 			this.height = 25.0f;
 			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
 			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
-			this.opacity = ChirpyBanner.CurrentConfig.BackgroundAlpha;
-			this.width = (viewWidth * ChirpyBanner.CurrentConfig.BannerWidth) - (banner_inset * 2);
+			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
+			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 			//ChirpLabel.height = (float)ChirpyBanner.CurrentConfig.TextSize;
 
 		}
@@ -565,19 +569,24 @@ namespace ChirpBanner
 
 	public class MyConfig
 	{
-		public bool DestroyBuiltinChirper = true;
-		public int ScrollSpeed = 50;
-		public int TextSize = 20;
-		// pixels
-		public string MessageColor = "#FFFFFFFF";
-		public string NameColor = "#31C3FFFF";
-		public int version = 0;
-		public float BackgroundAlpha = 0.1f;
-		public float BannerWidth = 1.0f;
-		public bool FilterChirps = false;
-		public bool ColorChirps = false;
-		static int currversion = 6;
+				public bool DestroyBuiltinChirper = true;
+				public int ScrollSpeed = 50;
+				public int TextSize = 20;
+					// pixels
+				public string MessageColor = "#FFFFFFFF";
+				public string NameColor = "#31C3FFFF";
+				public int version = 0;
+				public float BackgroundAlpha = 0.1f;
+				public float BannerWidth = 1.0f;
+				public bool FilterChirps = false;
+				public bool ColorChirps = false;
+				public int currversion = 6;
 
+		public static class ConfigHolder {
+				public static MyConfig Config = new MyConfig();
+						
+		}
+		/*
 		public static void Serialize (string filename, MyConfig config)
 		{
 			try {
@@ -587,6 +596,7 @@ namespace ChirpBanner
 					serializer.Serialize (writer, config);
 				}
 			} catch {
+					DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("currentTrailingEdge: {0}", currentTrailingEdge));
 			}
 		}
 
@@ -613,15 +623,36 @@ namespace ChirpBanner
 
 			return null;
 		}
+		*/
 
 		public static void SaveConfig ()
 		{
-			ChirpyBanner.theBannerPanel.SetConfig ();
-			MyConfig.Serialize ("ChirpBannerConfig.xml", ChirpyBanner.CurrentConfig);
+				try {
+					var xmlSerializer = new XmlSerializer(typeof(MyConfig));
+					using (var writer = new StreamWriter ("ChirpBannerConfig.xml")) {
+						xmlSerializer.Serialize(writer, ConfigHolder.Config);
+					}
+				}
+				catch (Exception e) {
+					//Debug.LogErrorFormat ("Unexpected {0} while saving options: {1}\n{2}", e.GetType ().Name, e.Message, e.StackTrace);
+					DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("Error saving config: {0}", e.Message));
+				}
+			
 		}
 
 		public static void LoadConfig ()
 		{
+				try {
+					var xmlSerializer = new XmlSerializer(typeof(MyConfig));
+					using (var reader = new StreamReader("ChirpBannerConfig.xml")) {
+						ConfigHolder.Config = (MyConfig)xmlSerializer.Deserialize(reader);
+					}
+				}
+				catch (FileNotFoundException) {
+					DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("No config xml"));
+				}
+	
+			/*
 			//MyConfig.Serialize("ChirpBannerConfig.xml", ChirpyBanner.CurrentConfig);
 			ChirpyBanner.CurrentConfig = MyConfig.Deserialize ("ChirpBannerConfig.xml");
 			if (ChirpyBanner.CurrentConfig == null) {
@@ -636,6 +667,7 @@ namespace ChirpBanner
 			}
 
 			MyConfig.Serialize ("ChirpBannerConfig.xml", ChirpyBanner.CurrentConfig);
+			*/
 		}
 
 	}
