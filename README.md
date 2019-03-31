@@ -3,6 +3,23 @@ Cities Skylines Mod - ChirpBanner+
 [update by aqtrans]
 Replaces Chirpy with a scrolling marquee style banner along the top 
 
+v2.4
+- Transparency and width are applied on-demand when changing in config panel
+
+v2.3.4
+- Default to opaque banner background. 
+- Ensure banner is always in the back, calling `SendToBack()`.
+
+v2.3.3
+- Refactor all config-related behavior, ensuring personal config is properly loaded.
+- Removed ability to resize chirps. Large chirps messed up the banner size.
+- Try and send banner "to the back", again.
+
+v2.3.0
+- Removed ability to adjust text size. Hard coded now.
+  I could not get the banner+text sizes to properly adjust after saving it.
+  Additionally, existing Chirps couldn't be adjusted on-the-fly, making it really awkward.
+
 v2.2
 - Transparency slider now works. 
 - Added a Banner Width option.

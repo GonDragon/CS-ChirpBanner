@@ -50,7 +50,7 @@ namespace ChirpBanner
 			colors.AddTextfield ("Name Color", MyConfig.ConfigHolder.Config.NameColor, CheckChirpNameColor, CheckChirpNameColor);
 			colors.AddTextfield ("Chirp Color", MyConfig.ConfigHolder.Config.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
 
-			UIHelperBase version = helper.AddGroup ("v2.3.4");
+			UIHelperBase version = helper.AddGroup ("v2.4.0");
 
 			//group.AddSlider("My Slider", 0, 1, 0.01f, 0.5f, EventSlide);
 			//group.AddDropdown("My Dropdown", new string[] { "First Entry", "Second Entry", "Third Entry" }, -1, EventSel);
@@ -58,7 +58,7 @@ namespace ChirpBanner
 			//group.AddButton("My Button", EventClick);
 			//group.AddTextfield ("My Textfield", "Default value", EventTextChanged, EventTextSubmitted);
 		}
-
+		
 		public void CheckHideChirper (bool c)
 		{
 			MyConfig.ConfigHolder.Config.DestroyBuiltinChirper = c;
@@ -95,12 +95,21 @@ namespace ChirpBanner
 		{
 			MyConfig.ConfigHolder.Config.BackgroundAlpha = c;
 			MyConfig.SaveConfig ();
+			if (ChirpyBanner.theBannerPanel != null) {
+				ChirpyBanner.theBannerPanel.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
+			}			
 		}
 
 		public void CheckWidth (float c)
 		{
 			MyConfig.ConfigHolder.Config.BannerWidth = c;
 			MyConfig.SaveConfig ();
+			if (ChirpyBanner.theBannerPanel != null) {
+				UIView uiv = UIView.GetAView ();
+				int viewWidth = (int)uiv.GetScreenResolution ().x;
+				const int banner_inset = 60;
+				ChirpyBanner.theBannerPanel.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
+			}
 		}
 
 		public void CheckChirpNameColor (string c)
@@ -491,7 +500,7 @@ namespace ChirpBanner
 
 			this.autoLayout = false;
 			this.clipChildren = true;
-			this.SendToBack ();
+			this.SendToBack();
 
 			UIDragHandle dh = (UIDragHandle)this.AddUIComponent (typeof(UIDragHandle));
 			//this.isInteractive = true;
@@ -500,18 +509,15 @@ namespace ChirpBanner
 
 		}
 
+		// SetConfig() is called every frame via OnUpdate(), ensuring 
 		public void SetConfig ()
 		{
 			UIView uiv = UIView.GetAView ();
 			int viewWidth = (int)uiv.GetScreenResolution ().x;
 			int viewHeight = (int)uiv.GetScreenResolution ().y;
 
-			this.height = 25.0f;
-			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
-			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
 			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
-			//ChirpLabel.height = (float)ChirpyBanner.CurrentConfig.TextSize;
 
 		}
 
