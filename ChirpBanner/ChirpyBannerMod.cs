@@ -63,6 +63,14 @@ namespace ChirpBanner
 		{
 			MyConfig.ConfigHolder.Config.DestroyBuiltinChirper = c;
 			MyConfig.SaveConfig ();
+			if (ChirpyBanner.theBannerPanel != null) {
+				if (c) {
+					ChirpyBanner.BuiltinChirper.ShowBuiltinChirper(false);
+				} else {
+					ChirpyBanner.BuiltinChirper.ShowBuiltinChirper(true);
+				}
+				
+			}
 		}
 
 		public void CheckFilterChirper (bool c)
@@ -150,8 +158,8 @@ namespace ChirpBanner
 
 	}
 
-	public class MyIThreadingExtension: IThreadingExtension
-	{
+	public class ChirpMoverThread: IThreadingExtension
+ 	{
 		static IThreading threading = null;
 		//Thread: Main
 		public void OnCreated (IThreading _threading)
@@ -436,6 +444,9 @@ namespace ChirpBanner
 				return;
 			}
 
+			//UISprite chirpSprite = (ChirpBannerSprite)uiv.AddUIComponent (typeof(ChirpBannerSprite));
+
+			//UIComponent parent = UIView.Find("ChirpBannerSprite");
 			theBannerPanel = (BannerPanel)uiv.AddUIComponent (typeof(BannerPanel));
 
 			if (theBannerPanel != null) {
@@ -463,6 +474,21 @@ namespace ChirpBanner
 		public bool IsCurrentlyVisible;
 	}
 
+/* 
+	public class ChirpBannerSprite : UIButton 
+	{
+		public override void Start () {
+			UIView uiv = UIView.GetAView ();
+			int viewWidth = (int)uiv.GetScreenResolution ().x;
+			int viewHeight = (int)uiv.GetScreenResolution ().y;
+		
+			//UISprite c = uiv.AddUIComponent<UISprite>();
+			this.normalBgSprite = "ChirperIcon";
+			this.position = new Vector3 ((-viewWidth / 2) + 60, (viewHeight / 2));
+			UIDragHandle dh = (UIDragHandle)this.AddUIComponent (typeof(UIDragHandle));
+		}
+	}
+*/
 	// A UIPanel that contains a queue of UILabels (one for each chirp to be displayed)
 	// - as UILabels are added, the are put in a queue with geometry information (current position, extents)
 	// - OnUpdate() handler moves each panel across the screen (all in line, like ducks :)
@@ -488,6 +514,7 @@ namespace ChirpBanner
 				Cleanup ();
 				return;
 			}
+
 			this.autoSize = true;
 			this.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left;
 			this.backgroundSprite = "GenericPanel";
@@ -497,6 +524,12 @@ namespace ChirpBanner
 			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
 			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
+
+			UISprite chirpSprite = this.AddUIComponent<UISprite>();
+            chirpSprite.spriteName = "ChirperIcon";
+            chirpSprite.relativePosition = new Vector3(-1f, -1f);
+            chirpSprite.size = new Vector2(27f, 27f);
+			chirpSprite.BringToFront();			
 
 			this.autoLayout = false;
 			this.clipChildren = true;
@@ -573,6 +606,7 @@ namespace ChirpBanner
 				bls.Label = ChirpLabel;
 				bls.IsCurrentlyVisible = false;
 				BannerLabelsQ.Enqueue (bls);
+				ChirpLabel.SendToBack();
 			}
 		}
 	}
