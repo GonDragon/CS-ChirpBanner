@@ -529,6 +529,7 @@ namespace ChirpBanner
 			//this.CenterToParent();
 			//this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
+			this.width = (viewWidth/2);
 			//this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 			this.maximumSize = new Vector2(viewWidth, 25f);
 			this.minimumSize = new Vector2(27f, 25f);
