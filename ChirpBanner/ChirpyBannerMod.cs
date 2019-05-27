@@ -516,7 +516,7 @@ namespace ChirpBanner
 			}
 
 			this.autoSize = true;
-			this.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left;
+			this.anchor = UIAnchorStyle.Top | UIAnchorStyle.CenterHorizontal;
 			this.backgroundSprite = "GenericPanel";
 			this.color = new Color32 (0, 0, 0, 0xff);
 			this.height = 25.0f;
@@ -524,6 +524,7 @@ namespace ChirpBanner
 			
 			// TODO: continue tweaking this; want it to be centered by default
 			this.relativePosition = new Vector3 (0f, 0f, 0f);
+			//this.CenterToParent();
 			//this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
 			//this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
@@ -552,6 +553,7 @@ namespace ChirpBanner
 
 		}
 
+		/* 
 		// SetConfig() is called every frame via OnUpdate(), ensuring 
 		public void SetConfig ()
 		{
@@ -563,6 +565,7 @@ namespace ChirpBanner
 			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 
 		}
+		*/
 
 		public void Cleanup ()
 		{
