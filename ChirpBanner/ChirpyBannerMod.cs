@@ -521,24 +521,34 @@ namespace ChirpBanner
 			this.color = new Color32 (0, 0, 0, 0xff);
 			this.height = 25.0f;
 			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
-			this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
+			
+			// TODO: continue tweaking this; want it to be centered by default
+			this.relativePosition = new Vector3 (0f, 0f, 0f);
+			//this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
 			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
-			this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
+			//this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
+			this.maximumSize = new Vector2(viewWidth, 25f);
+			this.minimumSize = new Vector2(27f, 25f);
 
 			UISprite chirpSprite = this.AddUIComponent<UISprite>();
             chirpSprite.spriteName = "ChirperIcon";
             chirpSprite.relativePosition = new Vector3(-1f, -1f);
             chirpSprite.size = new Vector2(27f, 27f);
-			chirpSprite.BringToFront();			
+			chirpSprite.BringToFront();
 
 			this.autoLayout = false;
 			this.clipChildren = true;
 			this.SendToBack();
 
 			UIDragHandle dh = (UIDragHandle)this.AddUIComponent (typeof(UIDragHandle));
-			//this.isInteractive = true;
-			//ChirpLabel = this.AddUIComponent<UILabel> ();
+			dh.size = new Vector2(25f, 25f);
+			dh.relativePosition = new Vector3(0f, 0f); 
 
+			UIResizeHandle rh = (UIResizeHandle)this.AddUIComponent (typeof(UIResizeHandle));
+			rh.backgroundSprite = "buttonresize";
+			rh.AlignTo(this, UIAlignAnchor.BottomRight);
+			rh.size = new Vector2(16f, 16f);
+			rh.relativePosition = new Vector3(rh.relativePosition.x - 16, rh.relativePosition.y - 16, 0);
 
 		}
 
