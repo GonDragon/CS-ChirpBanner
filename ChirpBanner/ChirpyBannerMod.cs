@@ -44,13 +44,13 @@ namespace ChirpBanner
 			group.AddSlider ("Scroll Speed", 50, 200, 1.0f, ScrollSpeedf, CheckScrollSpeed);
 			//group.AddSlider ("Chirp Size", 5, 100, 1.0f, ChirpyBanner.CurrentConfig.TextSize, CheckChirpSize);
 			group.AddSlider ("Transparency", 0.1f, 1, 0.10f, MyConfig.ConfigHolder.Config.BackgroundAlpha, CheckTransparency);
-			group.AddSlider ("Banner Width", 0, 1, 0.10f, MyConfig.ConfigHolder.Config.BannerWidth, CheckWidth);
+			//group.AddSlider ("Banner Width", 0, 1, 0.10f, MyConfig.ConfigHolder.Config.BannerWidth, CheckWidth);
 
 			UIHelperBase colors = helper.AddGroup ("Colors must start with # and be in 8-digit hex form");
 			colors.AddTextfield ("Name Color", MyConfig.ConfigHolder.Config.NameColor, CheckChirpNameColor, CheckChirpNameColor);
 			colors.AddTextfield ("Chirp Color", MyConfig.ConfigHolder.Config.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
 
-			UIHelperBase version = helper.AddGroup ("v2.4.0");
+			UIHelperBase version = helper.AddGroup ("v2.5.0");
 
 			//group.AddSlider("My Slider", 0, 1, 0.01f, 0.5f, EventSlide);
 			//group.AddDropdown("My Dropdown", new string[] { "First Entry", "Second Entry", "Third Entry" }, -1, EventSel);
@@ -108,6 +108,7 @@ namespace ChirpBanner
 			}			
 		}
 
+		/* 
 		public void CheckWidth (float c)
 		{
 			MyConfig.ConfigHolder.Config.BannerWidth = c;
@@ -119,6 +120,7 @@ namespace ChirpBanner
 				ChirpyBanner.theBannerPanel.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 			}
 		}
+		*/
 
 		public void CheckChirpNameColor (string c)
 		{
@@ -634,7 +636,7 @@ namespace ChirpBanner
 				public string NameColor = "#31C3FFFF";
 				public int version = 0;
 				public float BackgroundAlpha = 1.0f;
-				public float BannerWidth = 1.0f;
+				//public float BannerWidth = 1.0f;
 				public bool FilterChirps = false;
 				public bool ColorChirps = false;
 				public int currversion = 6;
