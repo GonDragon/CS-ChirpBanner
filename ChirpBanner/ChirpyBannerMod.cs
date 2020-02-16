@@ -225,7 +225,7 @@ namespace ChirpBanner
 		{
 			if (BannerPanel.hasChirps) {
 				bool bPopIt = false;
-				float currentTrailingEdge = 0;
+				float currentTrailingEdge = 20;
 				foreach (BannerLabelStruct bls in ChirpyBanner.theBannerPanel.BannerLabelsQ) {
 
 					//DebugOutputPanel.AddMessage(ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format("chirp y position: {0}", bls.Label.relativePosition.y));
@@ -460,6 +460,7 @@ namespace ChirpBanner
 				theBannerPanel.SendToBack();
 
 				// Tests for overlapping:
+				//theBannerPanel.CreateBannerLabel("This is a really long chirp! really chirpy chirpy!", 481516);
 				//theBannerPanel.CreateBannerLabel("OMG", 123456);
 				//theBannerPanel.CreateBannerLabel("OMG1222222222222233333333", 1234567);
 				//theBannerPanel.CreateBannerLabel("OMG22222222222 222222  4434", 12345678);
