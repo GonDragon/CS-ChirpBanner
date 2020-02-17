@@ -405,10 +405,13 @@ namespace ChirpBanner
 					// Otherwise, do something
 					if (important) {
 						//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("Chirp is important: {0}", message.text));
-						theBannerPanel.CreateBannerLabel (str, message.senderID);
+						
+						//theBannerPanel.CreateBannerLabel (str, message.senderID);
+						ChirpMoverThread.addTask2Main(() => { theBannerPanel.CreateBannerLabel (str, message.senderID); });
 					}
 				} else {
-					theBannerPanel.CreateBannerLabel (str, message.senderID);
+					//theBannerPanel.CreateBannerLabel (str, message.senderID);
+					ChirpMoverThread.addTask2Main(() => { theBannerPanel.CreateBannerLabel (str, message.senderID); });
 				}
             
 				//DebugOutputPanel.AddMessage (ColossalFramework.Plugins.PluginManager.MessageType.Message, string.Format ("textColorTag: {0}", textColorTag));
