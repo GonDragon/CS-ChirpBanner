@@ -526,17 +526,29 @@ namespace ChirpBanner
 			this.backgroundSprite = "GenericPanel";
 			this.color = new Color32 (0, 0, 0, 0xff);
 			this.height = 25.0f;
-			//this.height = (float)ChirpyBanner.CurrentConfig.TextSize + 20;
-			
-			// TODO: continue tweaking this; want it to be centered by default
 			this.relativePosition = new Vector3 (0f, 0f, 0f);
-			//this.CenterToParent();
-			//this.position = new Vector3 ((-viewWidth / 2) + banner_inset, (viewHeight / 2));
-			this.opacity = MyConfig.ConfigHolder.Config.BackgroundAlpha;
+			//this.opacity = 0.0f;
 			this.width = (viewWidth/2);
-			//this.width = (viewWidth * MyConfig.ConfigHolder.Config.BannerWidth) - (banner_inset * 2);
 			this.maximumSize = new Vector2(viewWidth, 25f);
 			this.minimumSize = new Vector2(27f, 25f);
+
+			UISprite leftCover = this.AddUIComponent<UISprite>();
+            leftCover.spriteName = "GenericPanel";
+			leftCover.color = new Color32 (0, 0, 0, 0xff);
+			//leftCover.AlignTo(this, UIAlignAnchor.BottomRight);
+            leftCover.relativePosition = new Vector3(0f, 0f);
+            leftCover.size = new Vector2(26f, 26f);
+			//leftCover.BringToFront();
+			leftCover.SendToBack();
+
+			UISprite rightCover = this.AddUIComponent<UISprite>();
+            rightCover.spriteName = "GenericPanel";
+			rightCover.color = new Color32 (0, 0, 0, 0xff);
+			rightCover.AlignTo(this, UIAlignAnchor.BottomRight);
+            rightCover.size = new Vector2(26f, 26f);
+			rightCover.relativePosition = new Vector3(rightCover.relativePosition.x - 26, rightCover.relativePosition.y - 26, 0);
+			//rightCover.BringToFront();
+			rightCover.SendToBack();
 
 			UISprite chirpSprite = this.AddUIComponent<UISprite>();
             chirpSprite.spriteName = "ChirperIcon";
@@ -555,8 +567,9 @@ namespace ChirpBanner
 			UIResizeHandle rh = (UIResizeHandle)this.AddUIComponent (typeof(UIResizeHandle));
 			rh.backgroundSprite = "buttonresize";
 			rh.AlignTo(this, UIAlignAnchor.BottomRight);
-			rh.size = new Vector2(16f, 16f);
-			rh.relativePosition = new Vector3(rh.relativePosition.x - 16, rh.relativePosition.y - 16, 0);
+			rh.size = new Vector2(18f, 18f);
+			rh.relativePosition = new Vector3(rh.relativePosition.x - 20, rh.relativePosition.y - 20, 0);
+			rh.BringToFront();
 
 		}
 
