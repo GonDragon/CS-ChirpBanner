@@ -50,7 +50,7 @@ namespace ChirpBanner
 			colors.AddTextfield ("Name Color", MyConfig.ConfigHolder.Config.NameColor, CheckChirpNameColor, CheckChirpNameColor);
 			colors.AddTextfield ("Chirp Color", MyConfig.ConfigHolder.Config.MessageColor, CheckChirpMsgColor, CheckChirpMsgColor);
 
-			UIHelperBase version = helper.AddGroup ("v2.5.0");
+			//UIHelperBase version = helper.AddGroup ("v2.5.0");
 
 			//group.AddSlider("My Slider", 0, 1, 0.01f, 0.5f, EventSlide);
 			//group.AddDropdown("My Dropdown", new string[] { "First Entry", "Second Entry", "Third Entry" }, -1, EventSel);
@@ -300,6 +300,7 @@ namespace ChirpBanner
 			}
 
 			CreateBannerUI ();
+			theBannerPanel.SendToBack();
 
 		}
 
@@ -434,10 +435,12 @@ namespace ChirpBanner
 
 		public void OnUpdate ()
 		{
+			/*
 			if (theBannerPanel != null)
 			{
 				theBannerPanel.SendToBack();
-			}			
+			}
+			*/			
 		}
 
 		private void CreateBannerUI ()
